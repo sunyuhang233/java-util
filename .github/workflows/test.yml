@@ -1,0 +1,31 @@
+name: Test Workflow
+
+#on: push
+
+#on: [ push,pull,pull_request ]
+
+on:
+  push:
+    branches:
+      - main
+#      - master
+#  pull_request:
+#    branches:
+#      - main
+#      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+      - name: build with maven
+        run: mvn -B test --file pom.xml
+      - uses: ashley-taylor/junit-report-annotations-action@master
+        with:
+          access-token: ${{ secrets.GITHUB_TOKEN }}
+        if: always()
